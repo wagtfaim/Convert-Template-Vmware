@@ -1,5 +1,5 @@
 ---
-- name: Converter Template to VM
+- name: Converter VM to Template
   gather_facts: no
   vars:
     ansible_python_interpreter: "/usr/bin/env python3"
