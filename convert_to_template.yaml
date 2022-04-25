@@ -1,0 +1,27 @@
+---
+- name: Converter Template to VM
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python3"
+  hosts: localhost
+  tasks:
+    - name: Find folder for VM
+      community.vmware.vmware_guest_find:
+        hostname: '{{ credential_vcenter_hostname }}'
+        password: '{{ credential_vcenter_password }}'
+        username: '{{ credential_vcenter_username }}'
+        validate_certs: False
+        name: "{{ guest_name }}"
+      delegate_to: localhost
+      register: vm_folder
+
+    - name: "Convert {{ guest_name }} to template"
+      vmware_guest:
+        hostname: "{{ credential_vcenter_hostname }}"
+        username: "{{ credential_vcenter_username }}"
+        password: "{{ credential_vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ vm_folder.folders[0] | regex_search('[a-zA-Z]([^\/]*)') }}"
+        folder: "{{ vm_folder.folders[0] }}"
+        name: "{{ guest_name }}"
+        is_template: yes
