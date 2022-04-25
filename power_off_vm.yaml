@@ -1,5 +1,5 @@
 ---
-- name: Desligar VM
+- name: Converter Template to VM
   gather_facts: no
   vars:
     ansible_python_interpreter: "/usr/bin/env python3"
@@ -16,4 +16,13 @@
       register: vm_folder
 
     - name: "Desligando {{ guest_name }}"
-      vmware_guest:
+      community.vmware.vmware_guest_powerstate:
+        hostname: '{{ credential_vcenter_hostname }}'
+        password: '{{ credential_vcenter_password }}'
+        username: '{{ credential_vcenter_username }}'
+        validate_certs: no
+        datacenter: "{{ vm_folder.folders[0] | regex_search('[a-zA-Z]([^\/]*)') }}"
+        folder: "{{ vm_folder.folders[0] }}"
+        name: "{{ guest_name }}"
+        state: powered-off
+    
