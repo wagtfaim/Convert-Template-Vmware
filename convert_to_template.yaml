@@ -21,8 +21,8 @@
         username: "{{ credential_vcenter_username }}"
         password: "{{ credential_vcenter_password }}"
         validate_certs: no
-        datacenter: "SPBRDC01"
-        #datacenter: "{{ vm_folder.folders[0] | regex_search('[a-zA-Z]([^\/]*)') }}"
+        #datacenter: "SPBRDC01"
+        datacenter: "{{ vm_folder.folders[0] | regex_search('[a-zA-Z]([^\/]*)') }}"
         folder: "{{ vm_folder.folders[0] }}"
         name: "{{ guest_name }}"
         is_template: yes
